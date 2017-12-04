@@ -1,0 +1,253 @@
+---
+title: "R introduction: data import and output"
+author: "Qiang Shen"
+date: "2017.11.28"
+output:
+  beamer_presentation:
+    theme: "Copenhagen"
+    colortheme: "dolphin"
+    fonttheme: "structurebold"
+    fig_caption: false  
+    latex_engine: xelatex
+---
+
+
+```{r setup, include=FALSE}
+library(knitr);library(xtable);library(foreign);library(dplyr);library(vcd);library(grid)
+options(width=80)
+opts_chunk$set(comment = "", warning = FALSE, message = FALSE, tidy = FALSE, size="small")
+##date: "`r format(Sys.time(), '%Y,%B  %d')`"
+##knitr::opts_chunk$set(results='asis')
+```
+
+---
+
+## R version 
+
+>- version 3.3.3 (2017.3.7)
+>- 32 bit / 64 bit (3.0) 
+>- Microsoft R Open 3.3.2 (revolutionanalytics)
+
+
+---
+
+
+## Framework
+
+![](plot/program.png)
+
+
+---
+
+
+## Data import and export
+                    
+![plot](plot/sminput.jpg) 
+
+---
+
+## Import and export
+
+- text file
+- excel file
+- stata,spss
+- online table
+- databases
+
+---
+
+## Import text file
+
+```{r, eval=FALSE}
+str(read.table)
+# write.table(iris,file='data/iris.txt',sep=','
+#,quote=F,row.names=F)
+#stringsAsFactors = F
+iris_txt<-read.table("course 1/data/iris.txt",sep=",",header=T,stringsAsFactors = F)
+#stringsAsFactors = F
+system.time(dat2 <- read.table("data/NYNEWYOR.txt", 
+    col.names=c("DAY","MONTH","YEAR","TEMP")))
+iris_csv<-read.csv('data/iris.csv')
+```
+
+---
+
+## Import excel file
+![plot](plot/excel_to_R.png) 
+
+---
+
+## Import excel file
+```{r, eval=FALSE}
+library(xlsx)
+indicator_xls1<-read.xlsx("data/HIV.xlsx", 1)
+system.time(indicator_xls<-read.xlsx("data/HIV.xlsx", 1))
+ ##outdated.
+ # library(XLConnect)
+ # wb <- loadWorkbook("data/HIV.xlsx")
+ # indicator_xls2 <- readWorksheet(wb, sheet=1) 
+# detach(package:devtools)
+# devtools::install_github("hadley/readxl")
+# library(readxl)
+# system.time(indicator_xls<-read_excel("data/HIV.xlsx", 1))
+```
+
+
+---
+
+## import data from SPSS and Stata
+
+```{r, eval=FALSE}
+library(foreign)
+Restaurant<-read.dta('data/Restaurant.dta')
+head(Restaurant)
+Restaurant_spss<-read.spss('data/restaurant.sav',
+                      to.data.frame=TRUE)
+head(Restaurant_spss)[1:5,]
+#Restaurant<-read.ssd('restaurant.ssd',
+                      #to.data.frame=TRUE)
+```
+
+
+---
+
+## tidyverse: menu
+
+![](plot/tidyverse.png)
+
+- readr
+- readxl
+- haven
+- *openxlsx*
+
+---
+
+
+## readxl
+![plot](plot/read-excel-files.png)
+
+---
+
+## readxl+openxlsx
+
+
+```{r}
+l <- list("iris" = iris, "mtcars" = mtcars, chickwts = chickwts, quakes = quakes)
+library(openxlsx)
+# detach(package:xlsx)
+write.xlsx(l, file = "data/datasets.xlsx")
+library(readxl)
+sample<-read_excel('data/datasets.xlsx','mtcars')
+excel_sheets('data/datasets.xlsx')
+```
+
+---
+
+
+## Online table
+http://mirrors.ustc.edu.cn/CRAN/web/packages/
+```{r,eval=F}
+## example 1:packages
+library(XML)
+theURL=paste("http://mirrors.ustc.edu.cn/CRAN/web/packages/available_packages_by_date.html",
+ sep="")
+Rpackages = readHTMLTable(theURL, header=T,
+          which=1,stringsAsFactors=F)
+dim(Rpackages)
+head(Rpackages)[1:4,1:3]
+write.csv(Rpackages,'Rpackages.csv',sep='\t',1)
+```
+
+---
+
+## Online table 2
+
+```{r,warning=F,message=F}
+#library(XML)
+#URL="http://www.jaredlander.com/2015/03/teaching-r-in-asia-2/"
+#location = readHTMLTable(URL, header=T, 
+#                         which=2,stringsAsFactors=F)
+#head(location)[1:4,1:4]
+```
+
+---
+
+## Databases: MySQL
+
+![plot](plot/mysql.jpg) 
+
+---
+
+## Databases: MySQL
+```{r,warning=F}
+# library(DBI);library(RMySQL)
+#  conn <- dbConnect(MySQL(),user='root',password='123456'
+#                    ,host='localhost',dbname = "rmysql")
+#  users = dbGetQuery(conn, "SELECT * FROM f_demo")
+#  dbDisconnect(conn)
+# head(users)
+```
+
+---
+
+##  Export data
+ 
+- text,csv,xlsx
+
+```{r, eval=FALSE}
+write.table(Restaurant,'output/Restaurant.txt',
+            sep="\t",quote=F,row.name=F)
+write.csv(Restaurant,'output/Restaurant.csv',
+            row.names=F)
+write.xlsx(Restaurant,'output/Restaurant.xlsx',
+            row.name=F)
+# writeWorksheetToFile('indicator.xlsx',
+# data=df, sheet="FirstSheet")
+```
+
+---
+
+
+## matlab and R: write data frame
+```{r}
+library(rmatio)
+##write data frame
+data<-data.frame(c(1,2,NA),c(4,5,6))
+names(data)<-c('a','b')
+data
+write.mat(data, 'data/dataframe.mat')
+```
+
+---
+
+## matlab: write list
+```{r}
+data2<-list(a=c(1:10),b=c(4,5,8))
+data2
+write.mat(data2, 'data/list.mat')
+```
+
+---
+
+## matlab: write nested list.
+```{r}
+data(iris)
+head(iris)[1,1:3]
+names(iris)<-sub("\\.", "_", names(iris))
+out<-split(iris[,c(1:4)],f=iris$Species)
+write.mat(out,'data/iris_nested.mat')
+```
+
+---
+
+##read mat file.
+```{r}
+read.mat('data/list.mat')
+```
+
+---
+## Data import and export
+                    
+![plot](plot/sminput.jpg) 
+
+---

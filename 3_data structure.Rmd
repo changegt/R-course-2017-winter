@@ -1,0 +1,689 @@
+---
+title: "Data structure"
+author: "Qiang Shen"
+date: "2017.11.28"
+output: beamer_presentation
+---
+
+
+```{r setup, include=FALSE}
+library(knitr);library(xtable);library(foreign);library(dplyr);library(vcd);library(grid)
+options(width=80)
+opts_chunk$set(comment = "", warning = FALSE, message = FALSE, tidy = FALSE, size="small")
+##knitr::opts_chunk$set(results='asis')
+```
+
+---
+
+## Contents
+
+- 1. a brief introduction of R
+- 2. Installment and interface
+- 3. math,variable and data structure
+- 4. Import and export of data
+
+
+---
+
+## math
+ 
+![](plot/arithmetic operators.png)
+```{r,eval=F,echo=F}
+# Modulo Operation
+5%%3  #x mod y:reminder
+7%/%4 #integer division:floor.
+5^2;5**2
+sqrt(25)
+log(10)  ##str(log)
+log(10,exp(1))   # natural logarithm
+exp(1)
+log(exp(10))
+log10(10) # common logarithm
+log(100,base = 10)
+```
+
+---
+
+
+## basics of R
+>- variable and data structure
+>- import and output of R
+
+---
+
+## data structure 
+ - variable and observations (statistics)
+ - records and fields (database)
+ - examples and attributes (machine learning)
+ - ![plot](plot/tmall.png) 
+
+---
+
+
+## variable
+ 
+- dynamic language vs. static language (declare)
+```{r,eval=F}
+x<-2
+y=3
+###
+a=5
+b<-a
+a="k"
+a;b #what is a, b?
+assign('s',7)
+```
+
+---
+
+## variable name
+
+- case senstive (vs. VB,SQL)
+- number,dot,underscore and "c"
+- the arts of name variables
+- ![plot](plot/reserved.png) 
+
+---
+
+## variable
+
+- remove of variable
+
+---
+
+## data: core concept in R.
+
+- scales of measurement (statistics)
+- atomic classes (R as a programming language)
+- data structure (R as a statistical software:container)
+
+---
+
+## scales of measurement in statistics.
+- Categorical:
+  nominal 
+  ordinal
+- Quantitative:
+  interval  (+/-)
+  ratio    (+/-/*//)
+- ![plot](plot/tmall.png) 
+
+---
+
+
+## basic('atomic') classes of objects
+
+- character: between " "or' '
+- numeric (real numbers)
+- integer
+- complex
+- logical: T(TRUE) or F(FALSE)
+
+---
+
+## basic('atomic') classes of objects
+
+- character: between " "or' '
+- numeric (real numbers)
+- ~~integer~~
+- ~~complex~~
+- logical: T(TRUE) or F(FALSE)
+
+---
+
+## data structure 
+
+- numeric:float/double
+- integer
+- complex
+```{r,eval=F}
+a<-53;b<-5.3;c=5.0
+class(c);print(a)
+1/0 #Inf 
+0/0 #NAN
+i<-5L;class(i)
+# j<-5+1i;class(j)
+```
+
+---
+
+
+## attributes
+R objects have attributes, which are like metadata for the object.
+
+- names,dimnames
+- dimensions(e.g. matrices,arrays)
+- class(e.g. integer, numeric)
+- length
+- user-defined attributes
+
+```{r,eval=F}
+attributes(mtcars)
+```
+
+---
+
+## Character and factor
+```{r}
+x<-'data' #or with ""
+class(x)
+factor('data')
+nchar(x)
+```
+
+---
+
+
+## logical type
+```{r,eval=F}
+TRUE##T,True
+FALSE##F,False
+is.logical(FALSE)
+TRUE*5
+FALSE*5
+a<-2;b<-3
+a!=b   ###if contional statement
+"data"=="sprite"
+"data"=="angel"
+``` 
+
+---
+
+## Revisit: basic('atomic') classes of objects
+
+- character: between " "or' '
+- numeric (real numbers)
+- ~~integer~~
+- ~~complex~~
+- logical: T(TRUE) or F(FALSE)
+
+---
+
+
+## data structure
+
+5 common structure
+
+- vector
+- matrix
+- arrary
+- data frame
+- list
+
+---
+
+## data structure
+
+![plot](plot/modes.png) 
+
+---
+
+## data strucutre in R
+
+- heterogenous or not
+- dimension
+
+![](plot/data structures.png)
+
+---
+
+## Vector
+
+- the **core data structure** in R.
+- container of data objects, but only for one class of data
+- **vectorization**
+```{r}
+a<-c(1,2,3) ###no row/column
+is.vector(a)
+```
+
+---
+
+## Vector
+numeric type as an example
+
+```{r,eval=FALSE}
+ c(1,2,3,4)#concatenate
+ c(1,3,6,7,7)
+ c(1:4) ##colon
+ seq(1,100,by=2)      
+  #calculation
+  c(1,2,3,4)+c(2,4,5,6)
+  c(1,2,3,4)-c(2,4,5,6)
+  c(1,2,3,4)*c(2,4,5,6)
+  c(1,2,3,4)/c(2,4,5,6)
+  c(1,2,3,4)+1  #vectorization
+  c(1,2,3,4)+c(2,4)   #recycle
+  c(1,2,3,4) %*% c(2,4,5,6) ##row times column
+```
+
+
+---
+
+
+## Vector
+multiplication/Euclidean length
+
+![](plot/dotproduction.png)
+```{r,eval=FALSE}
+a<-1:5;b<-2:6
+a*b
+b*a
+a*a
+###dot/inner product
+a%*%a;a%*%b;b%*%a
+sum(a*a);sum(a*b);sum(b*a)
+crossprod(a)
+matrix(a)%*%b
+matrix(b)%*%a
+```
+
+---
+
+
+## String vector
+
+```{r,eval=FALSE}
+c('1','2','3','4')
+c('bj','sh','gz','sz') ##first tier cities
+temp<-c('bj','sh','gz','shenzheng')
+nchar(temp)  #vectorization
+
+```
+ 
+---
+
+## logical vector
+
+```{r, eval=FALSE}
+c(T,F,T,T)  
+age<-c(23,21,20,24,18,15,25) ##legal age of marriage
+age>20
+price<-c(3,6,5,7,4,11,14)
+price>5
+# age[age>20] ## []
+```
+
+---
+
+## Explicit and implicit data coercion
+
+```{r,eval=F}
+#explicit
+c('1','2','3','4')
+as.numeric(c('1','2','3','4')) ##add 'h'
+as.character(c(3,5,6,7,8,11,14))
+a<-c('x','y','z')
+as.logical(a)
+
+
+##implicit: represent all objects  in a reasonable fashion.
+a<-c(1.2,'a')
+a<-c(TRUE,2)
+a<-c(FALSE,'a')
+```
+
+---
+
+## vector manipulation
+
+```{r, eval=FALSE}
+age<-c(3,51,6,74,58,21,14)
+age[2] ###[] vs. ()
+age[2:3]
+age[-1]
+age[age>20]
+
+## age vs. newage
+newage<-age[-3]
+newage
+
+city<-c('bj','sh','canton','sz')
+nchar(city)
+
+class(age);length(age);max(age)
+names(age)<-c('a','b','c','d','e','f','g')
+age
+names(age)<-letters[1:7] 
+age #names(temp)<-NULL
+
+##constants:month.name
+attributes(age)
+age
+```
+
+---
+
+## matrix
+
+- two dimensions
+
+$$\mathbf{X} = \left[\begin{array}
+{rrr}
+1 & 2 & 3 \\
+4 & 5 & 6 \\
+7 & 8 & 9
+\end{array}\right]
+$$
+
+```{r, eval=FALSE}
+vector<-c(1:12)
+matrix(vector,nrow = 3,ncol = 4)
+matrix(vector,nrow = 3,ncol = 4,byrow = T)
+mt<-matrix(vector,nrow = 3,ncol = 4,T)
+dimnames(mt) = list(c('gain1','gain2','gain3'),
+           c('loss1','loss2','loss3','loss4')) # 
+mt
+attributes(mt)
+rownames(mt)
+colnames(mt)
+v<-1:12
+dim(v)<-c(3,4)
+a<-3:6
+b<-15:18
+rbind(a,b)
+cbind(a,b)##no row or column for vector.
+##bonus
+v
+c(v)
+dim(v)<-c(12,1)
+
+```
+
+---
+
+## matrix
+
+```{r, eval=FALSE}
+mt
+mt[2,3]
+mt[2,]##colon in matlab
+mt[,3]
+mt[,'loss2']
+
+```
+
+---
+
+## magic square
+
+$$\mathbf{Magic Matrix} = \left[\begin{array}
+{rrr}
+8 & 1 & 6 \\
+3 & 5 & 7 \\
+4 & 9 & 2
+\end{array}\right]
+$$
+```{r,eval=F}
+my_mat<-matrix(c(8,3,4,1,5,9,6,7,2),ncol=3)
+my_mat[1,1]+my_mat[1,2]+my_mat[1,3]
+sum(my_mat[1,])
+rowSums(my_mat)
+colSums(my_mat)
+sum(diag(my_mat))
+```
+
+---
+
+## arrary
+ 
+```{r, eval=FALSE}
+dim1<-c("A1","A2")
+dim2<-c("B1","B2","B3","B4")
+dim3<-c("C1","C2","C3")
+a<-array(c(1:24),c(2,4,3),
+         dimnames=list(dim1,dim2,dim3))
+a
+a[1,2,3]
+```
+
+---
+## data frame
+
+- data frame
+- combination of vectors and factors.
+- attributes: nrow;ncol;dim
+```{r, eval=FALSE}
+city<-c('bj','sh','gz','sz')
+age<-c(22,34,34,24)
+sex<-c('M','F','M','F')
+people<-data.frame(city,age,sex)
+people
+people[2,3]
+people[,3]
+people$age
+people$age>30
+people[people$age>30,]
+
+
+dim(iris)
+ncol(iris);nrow(iris)
+rownames(people)<-letters[1:4]
+rownames(people)<-c(1,4,5,8)
+people
+rownames(people)<-NULL ##set back to generic index
+colnames(people)[3]
+
+head(iris);tail(iris)
+str(iris)
+iris[c(50:100),c(1:2),]
+iris[,c(1:2)]
+iris[,c('Sepal.Length','Sepal.Width')]
+
+iris$Sepal.Width
+iris[,'Sepal.Length']
+class(iris[,'Sepal.Length'])###reduced
+class(iris['Sepal.Length'])
+class(iris[,'Sepal.Length',drop=F])
+class(iris[['Sepal.Length']])###reduced
+
+###comparison with stata
+# plot(Sepal.Length,Petal.Length)
+plot(iris$Sepal.Length,iris$Petal.Length)
+
+attach(iris)
+plot(Sepal.Length,Petal.Length)
+detach(iris)
+
+with(iris,plot(Sepal.Length,Petal.Length))
+
+```
+
+---
+
+
+## list
+
+- list
+```{r, eval=FALSE}
+mylist<-list(city=city,age=age,age=sex)
+str(mylist)
+mylist[1]
+mylist$city
+mylist[[1]]
+```
+
+---
+
+## The importance of list
+- 1.any combinations
+```{r, eval=FALSE}
+g<-"my list" 
+h<-c(25,26,18,39)
+j<-matrix(1:10,nrow=5)
+k<-c("one","five","eight")
+mylist<-list(titile=g,age=h,j,k)
+mylist
+```
+
+---
+
+
+## The importance of list
+
+- 2. many output/return of R function is list
+```{r,fig.align = "center",echo=F}
+figure<-hist(Nile)
+figure
+figure$counts
+# attributes(plot1)
+```
+
+---
+## The importance of list
+ - 3. Using output as input.
+```{r,fig.align = "center",echo=F}
+with(mtcars,plot(wt,mpg,col='red',type='p',lwd=3))
+lmfit<-lm(mpg~wt,data=mtcars)
+abline(lmfit,lwd=2)
+summary(lmfit)
+results<-summary(lmfit)
+results$coefficients[2,1]*10
+```
+
+---
+
+--- &twocol
+## The importance of list
+*** =left
+```{r, echo=F}
+with(mtcars,plot(wt,mpg,col='red',type='p',lwd=3,main="WT",cex=2))
+lmfit1<-lm(mpg~wt,data=mtcars)
+abline(lmfit1,lwd=2)
+```
+
+*** =right
+```{r, echo=F}
+with(mtcars,plot(hp,mpg,col='red',type='p',lwd=3,main='HP',cex=2))
+lmfit2<-lm(mpg~hp,data=mtcars)
+abline(lmfit2,lwd=2)
+summary(lmfit1)
+summary(lmfit2)
+cat(paste('wt coeffient:',round(summary(lmfit1)$coe[2,1],2)),paste('hp coeffient:', round(summary(lmfit2)$coe[2,1],2)),sep='\n')
+
+```
+
+---
+
+
+## data mode
+
+![plot](plot/modes.png)
+
+---
+
+## Factor
+
+- scales of measurement: **nominal** and **ordinal** data.
+- __common__ and **ordered** factor
+```{r, eval=FALSE}
+http://taobaoshopping.org/how-to-view-taobao-seller-rating/
+##nominal
+sex<-c('male','female','male','female','male')
+sex_new<-factor(sex)#levels=c('male','female')
+str(sex_new)
+##ordinal
+rating<-c('heart','crown','diamond','heart','diamond')
+factor(rating,ordered=T,levels=c('heart','diamond',
+                             'crown'))
+```
+
+---
+
+## labels for factors
+```{r,eval=FALSE}
+patientID <- c(1, 2, 3, 4)
+age <- c(25, 34, 28, 52)
+gender<-c(1,1,2,1)
+diabetes <- c("Type1", "Type2", "Type1", "Type1")
+status <- c("Poor", "Improved", "Excellent", "Poor")
+diabetes <- factor(diabetes)
+gender <- factor(gender)
+status <- factor(status, order = TRUE,levels=c('Poor','Improved',
+                                               'Excellent'))
+patientdata <- data.frame(patientID,gender,age,diabetes,
+status)
+patientdata
+patientdata$gender<-with(patientdata,factor(gender,
+          levels=c(1,2),labels=c('male','female')))
+str(patientdata)
+summary(patientdata)
+
+```
+
+---
+
+## missing: NA vs. NULL vs. NaN 
+
+NULL means that there is no value,while NA and NaN 
+mean that there is some value,although one that is
+perhaps not usable.
+
+- NaN not-a-number
+- NA not available
+
+---
+
+## example 1
+
+```{r}
+v1 <-  c(1, NA, NULL,NaN)
+v1
+v2 <-  c("1", NA, NULL,NaN)
+v2  ##coercion
+l <-  list("1", NA, NULL,NaN)
+length(l[4])
+```
+
+---
+
+## NULL: values removal for data analysis
+##Assigning NULL to list items, removes them. 
+```{r}
+head(iris)[1:3,]
+iris_L<-sapply(iris,list)
+length(iris_L)
+iris_L$Sepal_Width<-NULL
+length(iris_L)
+```
+
+---
+
+## NA: caveat 1
+- na.rm
+```{r}
+vy <- c(1, 2, 3, NA, 5)
+mean(vy)
+mean(vy,na.rm = T)
+```
+
+---
+
+## NA: caveat 2
+- stata: gen x=var1==var2/ gen x=1 if var1==var2
+- R: NA==NA--->NA
+
+```{r}
+a<-c(1,2,NA,NA)
+b<-c(1,3,4,NA)
+a==b
+
+vy <- c(1, 2, 3, NA, 5)
+vy[!is.na(vy)]
+
+```
+
+
+
+---
+
+## common errors:
+   - lower case and upper case difference.
+   - forget (): eg. help(lm)
+   - mix [] and ()
+   - forget ""  
+   - forget "c"" for vector generation.
+   - use "\" in Windows OS for directory 
+   - myvar==3 or myvar=="Jack" but not myvar==NA, should be.is.na()
+   - forget to load packages needed.
+
